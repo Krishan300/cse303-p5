@@ -25,7 +25,7 @@ public:
 	: head(NULL)
 	{}
   Node* create_Node(int insert){
-    printf("%d\n", insert);
+    //printf("%d\n", insert);
     Node *a=new Node();
     a->value=insert;
     a->next=NULL;
@@ -45,9 +45,11 @@ public:
 	   if(head){
 	 
 	    if(key<head->value){
-	      Node* temp=head;
+	      /*     Node* temp=head;
 	      head->value=a->value;
-	      head->next=temp;
+	      head->next=temp;*/
+	      a->next=head;
+	      head=a;
 
 	      g_num_mutex.unlock();
 	      return true;
@@ -57,78 +59,68 @@ public:
 	   
 	     printf("Beggining new list %d\n", a->value);
 	     while(start->next){
-	      printf("%d\n", start->value);
+	       printf("%d\n", start->value);
 	 
-	 
-	 
-	 
-	   
-	      start=start->next;
 	      if(start->next && start->next->value>key){
 		a->next=start->next;
 	        start->next=a;
 		g_num_mutex.unlock();
 		return true;
 	      }
-	      
+	      start=start->next;
 	   
 	     }
-	    
-	    start->next=a;
-	    g_num_mutex.unlock();
-	    return true;
+	     start->next=a;
+	     g_num_mutex.unlock();
+	     return true;
 	   
 
-
 	   }
-	  else{
+	   else{
 
 	    
 	      
 	      
-	    
+	     printf("Beggining new list %d\n", a->value); 
 
 
 	    head=a;
 	   
-	  g_num_mutex.unlock();
-	  return true;
-	  /*  }
-	    else{
-	      Node* temp=head;
-	      head->value=a->value;
-	      head->next=temp;
-	      
-	      return true;
-	      }*/
+	    g_num_mutex.unlock();
+	    return true;
+	 
 	   
-	  }
+	   }
 	}
 	
 	/// remove *key* from the list if it was present; return true if the key
 	/// was removed successfully.
 	bool remove(int key)
 	{
+	  
 	  g_num_mutex.lock();
+	  printf("we are removing %d", key);
 	  Node* a;
 	  Node* RemovedNode;
-	  if(head){
+	  // if(head){
 	    if(head->value==key){
 	      
 	      
-	      if(head->next){
-		head->value=head->next->value;
-		Node *temp=head->next;
-		head->next=head->next->next;
-		temp=NULL;
+	      while(head->value==key){
 		
-	      }
-	      else{
-		head=NULL;
-	      }
-	      //head->value=0;
-	      //head->next=NULL;
-	      
+		
+		
+		
+		Node *temp=head;
+		head=head->next;
+		delete temp;
+		
+	     }
+	    
+	    /*else{
+		delete head;
+		}*/
+	 
 	      g_num_mutex.unlock();
 	      return true;
 	      
@@ -138,36 +130,91 @@ public:
 	    }
 	    a=head;
 	    
-	    while(a->next){ 
+	    while(a->next){
+	       printf("value of a is %d\n", a->value);
+	      //printf("value of a->next is %d\n", a->next->value);
+		if(a->value>key){
+		  g_num_mutex.unlock();
+		  return false;
+		}
 		if(a->next->value==key){
-		  RemovedNode=a->next;
-		  if(RemovedNode->next){
-		  
-		    a->next=RemovedNode->next;
-		  }
-		  else{
-		    a->next=NULL;
+		    Node* RemovedNode=a->next;
+
+
+		    printf("value of RemovedNode is %d\n", RemovedNode->value);
+		    while(RemovedNode->value==key && RemovedNode->next){
+		      Node* temp=RemovedNode;
+		      printf("value of RemovedNode is %d\n", RemovedNode->value);
+		      RemovedNode=RemovedNode->next;
+		      delete temp;
+		     
 		    }
 		  
-		  delete RemovedNode;
-		  g_num_mutex.unlock();
-		  return true;
-		}
-	       
-		else{
-		  a=a->next;
 		 
+		    a->next=RemovedNode;
+		    if(RemovedNode->value==key){
+		      a->next=NULL;
+		      delete RemovedNode;
+		    }
+		    g_num_mutex.unlock();
+		    return true;
 		}
+		
+
+		   
+		     a=a->next;
+		   
+
 	    }
-	   
-	        g_num_mutex.unlock();
-		return false;
-	  }
+	    //delete RemovedNode;
+		  g_num_mutex.unlock();
+		  return false;
 	}
+	       
+	 
+		 
+		
+
+	   
+	       
+	
+
+
+  
 	/// return true if *key* is present in the list, false otherwise
 	bool lookup(int key) const
 	{
-		return false;
+	     g_num_mutex.lock();
+	     
+	     
+	     if(head->value==key){
+	       g_num_mutex.unlock();
+	       return true;
+	     }
+	     
+	       
+	       Node* start=head;
+	       while(start->next){
+		 if(start->value==key){
+		   g_num_mutex.unlock();
+		   return true;
+		 }
+		 start=start->next;
+	       
+
+	       }
+	       g_num_mutex.unlock();
+	       return false;
+	     
+	   
+	  
+	
+	
+	
+	  
+	   
+	     
+	
 	}
 
 
