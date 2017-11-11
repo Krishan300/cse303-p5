@@ -8,29 +8,39 @@
 class chash
 {
 	/// The bucket list
-	const std::vector<clist> buckets;
+	//const std::vector<clist> buckets;
+	clist * buckets;
+	int bNum;
 
 public:
 	chash(unsigned _buckets)
-	{}
+	{
+		 bNum=_buckets;
+		 buckets= new clist[bNum];
+	}
+
 
 	/// insert *key* into the appropriate linked list if it doesn't already
 	/// exist; return true if the key was added successfully.
 	bool insert(int key)
 	{
-		return false;
+		 int b = key % bNum;
+		 return buckets[b].insert(key);
+		//return true;
 	}
 	/// remove *key* from the appropriate list if it was present; return true
 	/// if the key was removed successfully.
 	bool remove(int key)
 	{
-		return false;
+		int b = key % bNum;
+		return buckets[b].remove(key);
 	}
 	/// return true if *key* is present in the appropriate list, false
 	/// otherwise
 	bool lookup(int key) const
 	{
-		return false;
+		int b = key % bNum;
+		return buckets[b].remove(key);
 	}
 
 	//The following are not tested by the given tester but are required for grading
