@@ -121,12 +121,14 @@ public:
 	  Node *currentNode=head;
 
 	  if(currentNode->value == key){
-	    Node *temp=head;
+	    // Node *temp=head;
 	    if(head->next){
 	       head=currentNode->next;
 	    }
-	   
-	    delete temp;
+	    else{
+	      delete head;
+	    }
+	    //delete temp;
 	    g_num_mutex.unlock();
 	    return true;
 	  }
@@ -135,7 +137,7 @@ public:
 	   
 	    
 	  while(currentNode->next){
-	    // printf("value of currentNode %d\n", currentNode->value);
+	    //   printf("value of currentNode %d\n", currentNode->value);
 	      
 		if(currentNode->value>key){
 		  g_num_mutex.unlock();
@@ -145,7 +147,7 @@ public:
 		if(currentNode->next->value==key){
 		    Node* RemovedNode=currentNode->next;
 		    currentNode->next=RemovedNode->next;
-		    delete RemovedNode;
+		    // delete RemovedNode;
 		    g_num_mutex.unlock();
 		    return true;
 		}
@@ -175,7 +177,7 @@ public:
 	/// return true if *key* is present in the list, false otherwise
 	bool lookup(int key) const
 	{
-	 
+	       
 	       g_num_mutex.lock();
 	       if(!head){
 		 g_num_mutex.unlock();
@@ -184,9 +186,10 @@ public:
 	       
 	     
 	       Node *n=head;
-	       while(n!=NULL)
+	       while(n->next)
 		 {
-		   // printf("value in lookup list is %d\n", n->value);
+		  
+		   
 		   if(n->value == key)
 		     {
 		       g_num_mutex.unlock();
@@ -197,6 +200,11 @@ public:
 		     return false;
 		   }
 		   n = n->next;
+	       }
+
+	       if(n->value == key){
+		 g_num_mutex.unlock();
+		 return true;
 	       }
 	       g_num_mutex.unlock();
 	       return false;
