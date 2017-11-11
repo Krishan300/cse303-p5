@@ -36,7 +36,10 @@ public:
 	       pthread_rwlock_wrlock(&lock_rw);
 	       Node *a=create_Node(key);
 	       if(head){
-
+		 if(key==head->value){
+		   pthread_rwlock_unlock(&lock_rw);
+		   return false;
+		 }
 		 if(key<head->value){
 		   a->next=head;
 		   head=a;
@@ -46,8 +49,12 @@ public:
 	       
 		 Node* start=head;
 		 while(start->next){
+		   if(start->next->value==key){
+		     pthread_rwlock_unlock(&lock_rw);
+		     return false;
+		   }
 		   //printf("value of start is %d\n", start->value);
-		   if(start->next && start->next->value>key){
+		   else if(start->next && start->next->value>key){
 		     // printf("value of start is %d\n", start->value);
 		     a->next=start->next;
 		     start->next=a;

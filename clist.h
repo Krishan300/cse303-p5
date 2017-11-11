@@ -36,15 +36,18 @@ public:
 	/// true if the key was added successfully.
 	bool insert(int key)
 	{
-  
+	  
 	   g_num_mutex.lock();
-	 
-	    Node *a=create_Node(key);
+	   
+	   Node *a=create_Node(key);
 	 
 	 
 	   if(head){
-	 
-	    if(key<head->value){
+	     if(key==head->value){
+	       g_num_mutex.unlock();
+	       return false;
+	     }
+	     else if(key<head->value){
 	      /*     Node* temp=head;
 	      head->value=a->value;
 	      head->next=temp;*/
@@ -55,13 +58,16 @@ public:
 	      return true;
 	      
 	    }
-	     Node* start=head;
+	    Node* start=head;
 	   
-	     // printf("Beggining new list %d\n", a->value);
-	     while(start->next){
-	       // printf("%d\n", start->value);
-	 
-	      if(start->next && start->next->value>key){
+	  
+	    while(start->next){
+	    
+	       if(start->next->value==key){
+		 g_num_mutex.unlock();
+		 return false;
+	       }
+	       else if(start->next && start->next->value>key){
 		a->next=start->next;
 	        start->next=a;
 		g_num_mutex.unlock();
@@ -69,6 +75,14 @@ public:
 	      }
 	      start=start->next;
 	   
+	     }
+	    /*if(flag==1){
+	        g_num_mutex.unlock();
+	        return false;
+	     }*/
+	     if(start->value==key){
+	       g_num_mutex.unlock();
+	       return false;
 	     }
 	     start->next=a;
 	     g_num_mutex.unlock();
@@ -99,74 +113,51 @@ public:
 	{
 	  
 	  g_num_mutex.lock();
-	  //printf("we are removing %d\n", key);
-	  Node* a;
-	  Node* RemovedNode;
-	  // if(head){
-	    if(head->value==key){
-	      
-	      
-	      while(head->value==key){
-		
-		
-		
-		
-		Node *temp=head;
-		head=head->next;
-		delete temp;
-		
-	     }
-	    
-	    /*else{
-		delete head;
-		}*/
-	 
-	      g_num_mutex.unlock();
-	      return true;
-	      
-		
+	  //printf("value we are removing %d\n", key);
+	  if(!head){
+	    g_num_mutex.unlock();
+	    return false;
+	  }
+	  Node *currentNode=head;
 
-	     
+	  if(currentNode->value == key){
+	    Node *temp=head;
+	    if(head->next){
+	       head=currentNode->next;
 	    }
-	    a=head;
+	   
+	    delete temp;
+	    g_num_mutex.unlock();
+	    return true;
+	  }
+	  
+		 
+	   
 	    
-	    while(a->next){
-	      // printf("value of a is %d\n", a->value);
-	      //printf("value of a->next is %d\n", a->next->value);
-		if(a->value>key){
+	  while(currentNode->next){
+	    // printf("value of currentNode %d\n", currentNode->value);
+	      
+		if(currentNode->value>key){
 		  g_num_mutex.unlock();
 		  return false;
 		}
-		if(a->next->value==key){
-		    Node* RemovedNode=a->next;
 
-
-		    //printf("value of RemovedNode is %d\n", RemovedNode->value);
-		    while(RemovedNode->value==key && RemovedNode->next){
-		      Node* temp=RemovedNode;
-		      //printf("value of RemovedNode is %d\n", RemovedNode->value);
-		      RemovedNode=RemovedNode->next;
-		      delete temp;
-		     
-		    }
-		  
-		 
-		    a->next=RemovedNode;
-		    if(RemovedNode->value==key){
-		      a->next=NULL;
-		      delete RemovedNode;
-		    }
+		if(currentNode->next->value==key){
+		    Node* RemovedNode=currentNode->next;
+		    currentNode->next=RemovedNode->next;
+		    delete RemovedNode;
 		    g_num_mutex.unlock();
 		    return true;
 		}
 		
 
 		   
-		     a=a->next;
+		     currentNode=currentNode->next;
 		   
 
-	    }
-	    //delete RemovedNode;
+	  }
+
+	          
 		  g_num_mutex.unlock();
 		  return false;
 	}
@@ -184,27 +175,44 @@ public:
 	/// return true if *key* is present in the list, false otherwise
 	bool lookup(int key) const
 	{
-	     g_num_mutex.lock();
+	 
+	       g_num_mutex.lock();
+	       if(!head){
+		 g_num_mutex.unlock();
+		 return false;
+	       }
+	       
 	     
+	       Node *n=head;
+	       while(n!=NULL)
+		 {
+		   // printf("value in lookup list is %d\n", n->value);
+		   if(n->value == key)
+		     {
+		       g_num_mutex.unlock();
+		       return true;
+		     }
+		   else if(n->value > key){
+		     g_num_mutex.unlock();
+		     return false;
+		   }
+		   n = n->next;
+	       }
+	       g_num_mutex.unlock();
+	       return false;
+	}
 	     
-	     if(head->value==key){
+	       /*   if(head->value==key){
 	       g_num_mutex.unlock();
 	       return true;
 	     }
 	     
-	     /*   if(head->next){
-	       if(head->next->value==key){
-		 g_num_mutex.unlock();
-		 return true;
-		 }
-	       
-		 }*/
-	     
+		     
 	       Node* start=head;
 	       while(start->next){
-		 // printf("value of start is is %d\n", start->value);
+		
 		 if(start->value==key){
-		   //printf("value of start is is %d\n", start->value);
+		
 		   g_num_mutex.unlock();
 		 
 		   return true;
@@ -225,7 +233,8 @@ public:
 		 return true;
 	       }
 	       g_num_mutex.unlock();
-	       return false;
+	       return false;*/
+	       
 	     
 	   
 	  
@@ -236,7 +245,7 @@ public:
 	   
 	     
 	
-	}
+	
 
 
 	//The following are not tested by the given tester but are required for grading
