@@ -29,7 +29,7 @@ public:
 	: head(NULL)
 	{}
   Node* create_Node(int insert){
-    //printf("We are inserting %d\n", insert);
+    
     Node *a=new Node();
     a->value=insert;
     a->next=NULL;
@@ -42,7 +42,7 @@ public:
 	{
 	 
 	   g_num_mutex.lock();
-	   //printf("We are inserting %d\n", key);
+	   
 	   Node *a=create_Node(key);
 	 
 	 
@@ -66,7 +66,7 @@ public:
 	   
 	  
 	    while(start->next){
-	      //printf("value of start is %d\n", start->value);
+	   
 	       if(start->next->value==key){
 		 g_num_mutex.unlock();
 		 return false;
@@ -130,7 +130,7 @@ public:
 	       head=currentNode->next;
 	    }
 	    else{
-	      delete head;
+	      head=NULL;
 	    }
 	    //delete temp;
 	    g_num_mutex.unlock();

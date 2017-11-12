@@ -10,7 +10,7 @@
 #include "rwlist.h"
 #include "chash.h"
 #include "shash.h"
-
+//#include "shash2.h"
 /// help() - Print a help message
 void help(char *progname) {
     using std::cout;
@@ -154,5 +154,8 @@ int main(int argc, char **argv) {
     else if (test == 's') {
         bench<shash>(keyrange, ops, buckets, ratio, threads);
     }
+    /*  else if(test == 'a'){
+      bench<shash2>(keyrange, ops, buckets, ratio, threads);
+      }*/
     exit(0);
 }

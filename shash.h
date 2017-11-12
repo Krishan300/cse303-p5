@@ -1,4 +1,5 @@
 #include "clist.h"
+#include "snode.h"
 #pragma once
 
 #include <vector>
@@ -10,22 +11,22 @@
 
 class shash
 {
-    struct SNode{
-      std::mutex g_num_mutex;
-      clist* a=new clist(0);
-    };
-
+    std::vector<clist> buckets;
     int num=0;
-    SNode* bucketlist;
-
+    std::vector<snode> bucketlist;
     public:
-  shash(unsigned _buckets): num(_buckets)
+    shash(unsigned _buckets): num(_buckets), buckets(_buckets, clist(0)), bucketlist(_buckets, snode())
   	{
-	 bucketlist=new SNode[_buckets];
-	 //printf("%d\n", _buckets);
 	 
+         	 
+	 for(int i=0; i<_buckets; i++){
+	  
+	   bucketlist[i].setlistptr(&buckets[i]);
+	 }
 	  
   	}
+
+  
 
    
           
@@ -33,46 +34,34 @@ class shash
 	/// exist; return true if the key was added successfully.
 	bool insert(int key)
 	{
-	  int b = key % num;
 	  bool insert=true;
-	  bucketlist[b].g_num_mutex.lock();
-	  insert=(bucketlist[b].a)->insert(key);
-	  bucketlist[b].g_num_mutex.unlock();
-	  //printf("%s\n", insert ? "true" : "false" );
+	  int b = key % num;
+	  insert=bucketlist[b].insert(key);
 	  return insert;
-	  //printf("%d\n", num);
-	  /*      printf("%d\n", num);	  
-	        int b = key % num;
-		printf("%d\n", num);*/
-		/*	bucketlist[b].g_num_mutex.lock();
-	        bucketlist[b].(*a).insert(key);
-		bucketlist[b].g_num_mutex.unlock();*/
-		
-		
-		
+	  
+	 		
 	}
 	/// remove *key* from the appropriate list if it was present; return true
 	/// if the key was removed successfully.
 	bool remove(int key)
 	{
 	        bool remove=true;
-	        int b = key % num;
-		bucketlist[b].g_num_mutex.lock();
-		remove=(bucketlist[b].a)->remove(key);
-		bucketlist[b].g_num_mutex.unlock();
+		int b = key % num;
+		remove=bucketlist[b].remove(key);
+		
+			  /*bucketlist[b].g_num_mutex.lock();
+		remove=(bucketlist[b].listptr)->remove(key);
+		bucketlist[b].g_num_mutex.unlock();*/
 	        
 		return remove;
 	}
 	/// return true if *key* is present in the appropriate list, false
 	/// otherwise
-	bool lookup(int key) const
+	bool lookup(int key) 
 	{
 	  bool lookup=true;
 	  int b = key % num;
-	  bucketlist[b].g_num_mutex.lock();
-	  lookup=(bucketlist[b].a)->lookup(key);
-	  bucketlist[b].g_num_mutex.unlock();
-
+	  lookup=bucketlist[b].lookup(key);
 	  return lookup;
 	  
 	}
