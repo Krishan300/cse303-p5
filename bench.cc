@@ -114,8 +114,8 @@ int main(int argc, char **argv) {
     unsigned ops      = 1048576;
     unsigned buckets  = 16;
     unsigned ratio    = 80;
-    unsigned threads  = 2;
-    char     test     = 'h';
+    unsigned threads  = 15;
+    char     test     = 's';
 
     check_team(argv[0]);
 

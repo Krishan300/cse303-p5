@@ -8,8 +8,8 @@
 class chash
 {
   /// The bucket list
-  std::vector<clist> buckets;
-  int bNum = 0;
+     std::vector<clist> buckets;
+     int bNum = 0;
 
  public:
  chash(unsigned _buckets) : bNum(_buckets), buckets(_buckets, clist(0))

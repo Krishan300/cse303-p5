@@ -21,11 +21,15 @@ class clist
   Node* head=new Node();
 
 public:
+        clist()
+	: head(NULL)
+        {}  
+	  
 	clist(int)
 	: head(NULL)
 	{}
   Node* create_Node(int insert){
-    //print("%d\n", insert);
+    //printf("We are inserting %d\n", insert);
     Node *a=new Node();
     a->value=insert;
     a->next=NULL;
@@ -36,9 +40,9 @@ public:
 	/// true if the key was added successfully.
 	bool insert(int key)
 	{
-	  
+	 
 	   g_num_mutex.lock();
-	   
+	   //printf("We are inserting %d\n", key);
 	   Node *a=create_Node(key);
 	 
 	 
@@ -62,7 +66,7 @@ public:
 	   
 	  
 	    while(start->next){
-	    
+	      //printf("value of start is %d\n", start->value);
 	       if(start->next->value==key){
 		 g_num_mutex.unlock();
 		 return false;
@@ -113,7 +117,7 @@ public:
 	{
 	  
 	  g_num_mutex.lock();
-	  //printf("value we are removing %d\n", key);
+	  
 	  if(!head){
 	    g_num_mutex.unlock();
 	    return false;
@@ -137,8 +141,8 @@ public:
 	   
 	    
 	  while(currentNode->next){
-	    //   printf("value of currentNode %d\n", currentNode->value);
-	      
+	        
+	    //   printf("value in list is %d\n", currentNode->value);
 		if(currentNode->value>key){
 		  g_num_mutex.unlock();
 		  return false;
@@ -146,16 +150,21 @@ public:
 
 		if(currentNode->next->value==key){
 		    Node* RemovedNode=currentNode->next;
-		    currentNode->next=RemovedNode->next;
-		    // delete RemovedNode;
+		    if(RemovedNode->next){
+		      currentNode->next=RemovedNode->next;
+		    }
+		    else{
+		      currentNode->next=NULL;
+		    }
+		      // delete RemovedNode;
 		    g_num_mutex.unlock();
 		    return true;
 		}
 		
-
+		 
 		   
 		     currentNode=currentNode->next;
-		   
+		     
 
 	  }
 

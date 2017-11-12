@@ -40,7 +40,7 @@ Task #2: Employ readers/writer locking to increase concurrency (10 points)
 
 Task #3: Use your clist to create a fixed-size chash (15 points)
 
-  This will be a very straightforward task: you will re-use your concurrent list as the building block for a concurrent hash table. Your hash table should consist of a fixed-size (but configurable) array of concurrent  lists, and your hash function need only do modular arithmetic on the integer key in order to choose a bucket.
+  This will be a very straightforward task: you will re-use your concurrent list as the building block for a concurrent hash table. Your hash table should consist of a fixed-size (but configurable) array  of concurrent  lists, and your hash function need only do modular arithmetic on the integer key in order to choose a bucket.
 
   To test your hash, be sure to experiment with the parameters to the benchmark. Note, too, that you may not see the good speedup that you expect. This could be due to data structure design issues, or due to other users on the machine when you run tests.
 
