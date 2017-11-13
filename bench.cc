@@ -10,7 +10,7 @@
 #include "rwlist.h"
 #include "chash.h"
 #include "shash.h"
-//#include "shash2.h"
+#include "shash2.h"
 /// help() - Print a help message
 void help(char *progname) {
     using std::cout;
@@ -115,7 +115,7 @@ int main(int argc, char **argv) {
     unsigned buckets  = 16;
     unsigned ratio    = 80;
     unsigned threads  = 15;
-    char     test     = 's';
+    char     test     = 'l';
 
     check_team(argv[0]);
 

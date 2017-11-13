@@ -1,7 +1,7 @@
 #include "clist.h"
-#include "snode.h"
+//#include "snode.h"
 #pragma once
-
+#include "snode.h"
 #include <vector>
 /// TODO: complete this implementation of a thread-safe (concurrent) hash
 ///       table of integers, implemented as an array of linked lists.  In
@@ -11,7 +11,7 @@
 
 class shash
 {
-    std::vector<clist> buckets;
+     std::vector<clist> buckets;
     int num=0;
     std::vector<snode> bucketlist;
     public:
@@ -20,13 +20,15 @@ class shash
 	 
          	 
 	 for(int i=0; i<_buckets; i++){
-	  
+          
 	   bucketlist[i].setlistptr(&buckets[i]);
 	 }
 	  
-  	}
-
+	 }
   
+
+  /* shash(unsigned _buckets){
+  }*/
 
    
           
@@ -34,10 +36,12 @@ class shash
 	/// exist; return true if the key was added successfully.
 	bool insert(int key)
 	{
-	  bool insert=true;
+
 	  int b = key % num;
-	  insert=bucketlist[b].insert(key);
-	  return insert;
+	  //printf("%d\n", b);
+	  
+	  return bucketlist[b].insert(key);
+	
 	  
 	 		
 	}
@@ -45,24 +49,25 @@ class shash
 	/// if the key was removed successfully.
 	bool remove(int key)
 	{
-	        bool remove=true;
-		int b = key % num;
-		remove=bucketlist[b].remove(key);
+	       
+	       int b = key % num;
+	       
+	       return bucketlist[b].remove(key);
 		
 			  /*bucketlist[b].g_num_mutex.lock();
 		remove=(bucketlist[b].listptr)->remove(key);
 		bucketlist[b].g_num_mutex.unlock();*/
 	        
-		return remove;
+		
 	}
 	/// return true if *key* is present in the appropriate list, false
 	/// otherwise
 	bool lookup(int key) 
 	{
-	  bool lookup=true;
+	  //bool lookup=true;
 	  int b = key % num;
-	  lookup=bucketlist[b].lookup(key);
-	  return lookup;
+	  return bucketlist[b].lookup(key);
+	  
 	  
 	}
 

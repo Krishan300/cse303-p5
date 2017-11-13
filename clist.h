@@ -1,4 +1,5 @@
 #pragma once
+#include "Node.h"
 #include <mutex>
 
 
@@ -9,18 +10,26 @@ std::mutex g_num_mutex;
 class clist
 {
 	/// a Node consists of a value and a pointer to another node
-	struct Node
-	{
+  /*	struct Node
+		{
 		int value;
 		Node* next;
 	  Node(): value(0), next(NULL) {
 	  }
-	};
+	  };*/
 
 	/// The head of the list is referenced by this pointer
-  Node* head=new Node();
+  //  Node* head=new Node();
 
 public:
+  /*      struct Node
+	 {
+	   int value;
+	   Node* next;
+	   Node(): value(0), next(NULL) {
+	   }
+	   };*/
+        Node* head;
         clist()
 	: head(NULL)
         {}  
@@ -28,6 +37,7 @@ public:
 	clist(int)
 	: head(NULL)
 	{}
+
   Node* create_Node(int insert){
     
     Node *a=new Node();
@@ -35,7 +45,7 @@ public:
     a->next=NULL;
     return a;
 
-  }
+    }
 	/// insert *key* into the linked list if it doesn't already exist; return
 	/// true if the key was added successfully.
 	bool insert(int key)
@@ -66,7 +76,7 @@ public:
 	   
 	  
 	    while(start->next){
-	   
+	      
 	       if(start->next->value==key){
 		 g_num_mutex.unlock();
 		 return false;

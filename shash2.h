@@ -1,6 +1,6 @@
 #pragma once
-//#include "snode2.h"
-//#include <vector>
+#include "snode2.h"
+#include <vector>
 /// TODO: complete this implementation of a thread-safe (concurrent) hash
 ///       table of integers, implemented as an array of linked lists.  In
 ///       this implementation, each list should have a "sentinel" node that
@@ -17,15 +17,15 @@ public:
 
 
    
-    shash2(unsigned _buckets)
+  shash2(unsigned _buckets)
     {}
    
-  /*  shash2(unsigned _buckets): num(_buckets), buckets(_buckets, clist(0)), bucketlist(_buckets, snode2())
+  /*shash2(unsigned _buckets): num(_buckets), buckets(_buckets, clist(0)), bucketlist(_buckets, snode2())
 	{
 	  snode2 a=snode2();
 	  for(int i=0; i<_buckets; i++){
 	    a.setlistptr(&buckets[i]);
-	    bucketlist[i]=snode2(a);
+	    bucketlist[i]=snode2(a); //copy constructor
 	  }
 	  
 	  }*/

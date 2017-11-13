@@ -1,5 +1,5 @@
 #include "clist.h"
-
+#include "Node.h"
 #pragma once
 #include<vector>
 
@@ -24,6 +24,7 @@ class chash
   bool insert(int key)
   {
     int b = key % bNum;
+
     return buckets[b].insert(key);
     //return false;
 
