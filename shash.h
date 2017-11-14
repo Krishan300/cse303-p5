@@ -19,12 +19,12 @@ class shash
   	{
 	 
          	 
-	 for(int i=0; i<_buckets; i++){
+	  /* for(int i=0; i<_buckets; i++){
           
 	   bucketlist[i].setlistptr(&buckets[i]);
-	 }
+	   }*/
 	  
-	 }
+	}
   
 
   /* shash(unsigned _buckets){

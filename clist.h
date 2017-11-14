@@ -52,7 +52,7 @@ public:
 	{
 	 
 	   g_num_mutex.lock();
-	   
+	   printf("value we are inserting %d\n", key);
 	   Node *a=create_Node(key);
 	 
 	 
@@ -76,7 +76,7 @@ public:
 	   
 	  
 	    while(start->next){
-	      
+	      printf("value of start %d\n", start->value);
 	       if(start->next->value==key){
 		 g_num_mutex.unlock();
 		 return false;

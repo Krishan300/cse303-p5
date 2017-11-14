@@ -10,7 +10,7 @@
 #include "rwlist.h"
 #include "chash.h"
 #include "shash.h"
-#include "shash2.h"
+//#include "shash2.h"
 /// help() - Print a help message
 void help(char *progname) {
     using std::cout;
@@ -115,7 +115,7 @@ int main(int argc, char **argv) {
     unsigned buckets  = 16;
     unsigned ratio    = 80;
     unsigned threads  = 15;
-    char     test     = 'l';
+    char     test     = 's';
 
     check_team(argv[0]);
 
@@ -128,7 +128,7 @@ int main(int argc, char **argv) {
           case 'b': buckets  = atoi(optarg); break;
           case 'r': ratio    = atoi(optarg); break;
           case 't': threads  = atoi(optarg); break;
-          case 'n': test = optarg[0];        break;
+          case 'a': test = optarg[0];        break;
         }
     }
 
@@ -154,7 +154,7 @@ int main(int argc, char **argv) {
     else if (test == 's') {
         bench<shash>(keyrange, ops, buckets, ratio, threads);
     }
-    /*  else if(test == 'a'){
+    /*    else if(test == 'a'){
       bench<shash2>(keyrange, ops, buckets, ratio, threads);
       }*/
     exit(0);
