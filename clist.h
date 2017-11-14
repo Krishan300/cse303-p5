@@ -52,49 +52,49 @@ public:
 	{
 	 
 	   g_num_mutex.lock();
-	   printf("value we are inserting %d\n", key);
+	   //printf("value we are inserting %d\n", key);
 	   Node *a=create_Node(key);
 	 
 	 
 	   if(head){
-	     if(key==head->value){
-	       g_num_mutex.unlock();
-	       return false;
-	     }
-	     else if(key<head->value){
-	      /*     Node* temp=head;
-	      head->value=a->value;
-	      head->next=temp;*/
+	   
+	     if(key<head->value){
+	   
+	   
+	       // printf("value of head is %d\n", head->value);
 	      a->next=head;
 	      head=a;
-
+	      // printf("new value of head is %d\n", head->value);
 	      g_num_mutex.unlock();
 	      return true;
 	      
-	    }
+	     }
 	    Node* start=head;
 	   
 	  
 	    while(start->next){
-	      printf("value of start %d\n", start->value);
-	       if(start->next->value==key){
+	      //printf("value of start %d\n", start->value);
+	       if(start->value==key){
+		
 		 g_num_mutex.unlock();
 		 return false;
 	       }
-	       else if(start->next && start->next->value>key){
+	       else if(start->next->value>key){
+		 //	printf("value of start is %d\n", start->value);
+		 //printf("value of start's next is %d\n", start->next->value);
 		a->next=start->next;
 	        start->next=a;
 		g_num_mutex.unlock();
 		return true;
 	      }
+	       // printf("value of start %d\n", start->value); 
 	      start=start->next;
 	   
-	     }
-	    /*if(flag==1){
-	        g_num_mutex.unlock();
-	        return false;
-	     }*/
+	    }
+	   	   
+	    //    printf("value of start is %d\n",start->value);
 	     if(start->value==key){
+	      
 	       g_num_mutex.unlock();
 	       return false;
 	     }
@@ -127,7 +127,7 @@ public:
 	{
 	  
 	  g_num_mutex.lock();
-	  
+	  //printf("value we are removing %d\n", key);
 	  if(!head){
 	    g_num_mutex.unlock();
 	    return false;
@@ -135,14 +135,15 @@ public:
 	  Node *currentNode=head;
 
 	  if(currentNode->value == key){
-	    // Node *temp=head;
+	    // printf("Removing head \n");
 	    if(head->next){
 	       head=currentNode->next;
+	       //printf("New value of head is %d\n", head->value);
 	    }
 	    else{
 	      head=NULL;
 	    }
-	    //delete temp;
+	  
 	    g_num_mutex.unlock();
 	    return true;
 	  }
@@ -154,12 +155,14 @@ public:
 	        
 	    //   printf("value in list is %d\n", currentNode->value);
 		if(currentNode->value>key){
+		  // printf("value %d is greater than key\n", currentNode->value);
 		  g_num_mutex.unlock();
 		  return false;
 		}
 
 		if(currentNode->next->value==key){
 		    Node* RemovedNode=currentNode->next;
+		    //printf("Removing value %d\n", currentNode->next);
 		    if(RemovedNode->next){
 		      currentNode->next=RemovedNode->next;
 		    }
@@ -171,8 +174,8 @@ public:
 		    return true;
 		}
 		
-		 
-		   
+		    
+		// printf("value of currentNode is %d\n", currentNode->value);
 		     currentNode=currentNode->next;
 		     
 

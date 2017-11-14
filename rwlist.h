@@ -36,10 +36,10 @@ public:
 	       pthread_rwlock_wrlock(&lock_rw);
 	       Node *a=create_Node(key);
 	       if(head){
-		 if(key==head->value){
+		 /*	 if(key==head->value){
 		   pthread_rwlock_unlock(&lock_rw);
 		   return false;
-		 }
+		   }*/
 		 if(key<head->value){
 		   a->next=head;
 		   head=a;
@@ -49,19 +49,23 @@ public:
 	       
 		 Node* start=head;
 		 while(start->next){
-		   if(start->next->value==key){
+		   if(start->value==key){
 		     pthread_rwlock_unlock(&lock_rw);
 		     return false;
 		   }
 		   //printf("value of start is %d\n", start->value);
-		   else if(start->next && start->next->value>key){
-		     // printf("value of start is %d\n", start->value);
-		     a->next=start->next;
-		     start->next=a;
-		     pthread_rwlock_unlock(&lock_rw);
-		     return true;
+		    else if(start->next->value>key){
+		    
+		      a->next=start->next;
+		      start->next=a;
+		      pthread_rwlock_unlock(&lock_rw);
+		      return true;
 		   }
 		   start=start->next;
+		 }
+		 if(start->value==key){
+		   pthread_rwlock_unlock(&lock_rw);
+		   return false;
 		 }
 		 start->next=a;
 		 pthread_rwlock_unlock(&lock_rw);
@@ -78,49 +82,57 @@ public:
 	bool remove(int key)
 	{
 	        pthread_rwlock_wrlock(&lock_rw);
-		//printf("We are removing %d\n", key);
+		//printf("value to remove is %d\n", key);
 		Node* a;
 		Node* RemovedNode;
-		if(head->value==key){
-
-		  while(head->value==key){
-		    Node* temp=head;
-		    head=head->next;
-		    delete temp;
+		if(head){
+		  //	  printf("value of head is %d\n", head->value);
+		  if(head->value==key){
+		    if(head->next){
+		      head=head->next;
+		      //  printf("new value of head is %d\n", head->value);
+		    }
+		    else{
+		      head=NULL;
+		    }
+		 
+		     pthread_rwlock_unlock(&lock_rw);
+		     return true;
 		  }
-		  pthread_rwlock_unlock(&lock_rw);
-		  return true;
-		}
-		a=head;
+		 a=head;
 		while(a->next){
 		  //printf("Removal list %d\n", a->value);
 		  if(a->value>key){
 		    pthread_rwlock_unlock(&lock_rw);
+		    // printf("value of a is %d\n", a->value);
 		    return false;
 		  }
 		  
 		  if(a->next->value==key){
-		    // printf("Removal list %d\n", a->value);
-		    Node* RemovedNode=a->next;
-		    while(RemovedNode->value==key && RemovedNode->next){
-		      Node* temp=RemovedNode;
-		      RemovedNode=RemovedNode->next;
-		      delete temp;
-		    }
-		    a->next=RemovedNode;
-		    if(RemovedNode->value==key){
-		      a->next=NULL;
-		      delete RemovedNode;
-
-		    }
-		    pthread_rwlock_unlock(&lock_rw);
-		    return true;
+		    //printf("Removing  %d\n", a->next->value);
+		     Node* RemovedNode=a->next;
+		     if(RemovedNode->next){
+		       a->next=RemovedNode->next;
+		       //  printf("New value of a->next is %d\n", a->next->value);
+		     }
+		     else{
+		       a->next=NULL;
+		     }
+		     pthread_rwlock_unlock(&lock_rw);
+		     return true;
 		  }
+		  //printf("Value of a is %d\n", a->value);
 		  a=a->next;
 		}
+
 		
 		pthread_rwlock_unlock(&lock_rw);
 		return false;
+		}
+		else{
+		  pthread_rwlock_wrlock(&lock_rw);
+		  return false;
+		}
 	}
 	/// return true if *key* is present in the list, false otherwise
 	bool lookup(int key) const
@@ -128,22 +140,25 @@ public:
 	        pthread_rwlock_rdlock(&lock_rw);
 		//printf("we are looking up %d\n", key);
 		//bool lookup=false;
-		if(head->value==key){
-		  // printf("true\n");
+		/*	if(head->value==key){
+		  printf("true\n");
 		  pthread_rwlock_unlock(&lock_rw);
 		  return true;
-		}
+		  }*/
 	
 	
 		Node* start=head;
 		
-		while(start->next){
+		while(start){
+		  // printf("%d\n",start->value);
 		  if(start->value==key){
+		    
 		    // printf("true\n");
 		    pthread_rwlock_unlock(&lock_rw);
 		    return true;
 		  }
 		  if(start->value>key){
+		    //printf("false\n");
 		    pthread_rwlock_unlock(&lock_rw);
 		    // printf("false\n");
 		    return false;
@@ -152,11 +167,11 @@ public:
 		  //printf("value we see while looking up %d\n", start->value);
 		}
 
-		if(start->value==key){
+		/*	if(start->value==key){
 		  pthread_rwlock_unlock(&lock_rw);                         
 		    return true;
 		  
-		}
+		    }*/
 		pthread_rwlock_unlock(&lock_rw);
 	
 		return false;

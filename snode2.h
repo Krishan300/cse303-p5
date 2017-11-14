@@ -44,7 +44,7 @@ class snode2{
     newmutex.lock();
    
     Node *a=create_Node(key);
-    Node *start=listptr;
+    //  Node *start=listptr;
     if(listptr){
 	                                         
        if(key<listptr->value){
@@ -53,7 +53,7 @@ class snode2{
               newmutex.unlock();
 	      return true;
          }
-       
+      Node *start=listptr; 
       while(start->next){
 	 if(start->value==key){
 	 
@@ -89,7 +89,7 @@ class snode2{
   }
   bool remove(int key){
      newmutex.lock();
-     Node* start=listptr;
+     //Node* start=listptr;
      if(listptr){
        if(listptr->value==key){
 	 if(listptr->next){ //set listptr to next if has a next
@@ -100,7 +100,8 @@ class snode2{
 	 }
 	 newmutex.unlock();
 	 return true;
-       }
+          }
+       Node* start=listptr;
        while(start->next){
 	 if(start->value>key){
 	   newmutex.unlock();
@@ -121,11 +122,11 @@ class snode2{
 	 start=start->next;
 
        }
-       if(start->value==key){
+       /*      if(start->value==key){
 	 start=NULL;
 	 newmutex.unlock();
 	 return true;
-       }
+	 }*/
        newmutex.unlock();
        return false;
      }
