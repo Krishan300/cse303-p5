@@ -8,12 +8,16 @@
 class chash
 {
   /// The bucket list
-     std::vector<clist> buckets;
+     const std::vector<clist> buckets;
      int bNum = 0;
 
  public:
  chash(unsigned _buckets) : bNum(_buckets), buckets(_buckets, clist(0))
     {
+      if(bNum<=0){
+	printf("You need more than 1 bucket \n");
+	exit(0);
+      }
       // bNum=_buckets;
       // buckets= new clist[bNum];
     }
@@ -24,8 +28,8 @@ class chash
   bool insert(int key)
   {
     int b = key % bNum;
-
-    return buckets[b].insert(key);
+    clist &castedlist=const_cast<clist&>(buckets[b]);
+    return castedlist.insert(key);
     //return false;
 
     //return true;
@@ -35,7 +39,8 @@ class chash
   bool remove(int key)
   {
     int b = key % bNum;
-    return buckets[b].remove(key);
+    clist &castedlist=const_cast<clist&>(buckets[b]);
+    return castedlist.remove(key);
     //return false;
 
   }
@@ -44,7 +49,8 @@ class chash
   bool lookup(int key) //const
   {
     int b = key % bNum;
-    return buckets[b].lookup(key);
+    clist &castedlist=const_cast<clist&>(buckets[b]);
+    return castedlist.lookup(key);
     //return false;
 
   }

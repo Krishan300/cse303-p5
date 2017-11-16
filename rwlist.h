@@ -33,16 +33,20 @@ public:
 	/// true if the key was added successfully.
 	bool insert(int key)
 	{
+	  
 	       pthread_rwlock_wrlock(&lock_rw);
+	       // printf("we are inserting %d\n", key);
 	       Node *a=create_Node(key);
 	       if(head){
-		 /*	 if(key==head->value){
-		   pthread_rwlock_unlock(&lock_rw);
-		   return false;
-		   }*/
+	
+		 
+		 
+		 
 		 if(key<head->value){
+		   // printf("value of head is %d\n", head->value);
 		   a->next=head;
 		   head=a;
+		   //printf("new value of head is %d\n", head->value);
 		   pthread_rwlock_unlock(&lock_rw);
 		   return true;
 		 }
@@ -55,14 +59,17 @@ public:
 		   }
 		   //printf("value of start is %d\n", start->value);
 		    else if(start->next->value>key){
-		    
+		      //  printf("value of start is %d\n", start->value);
+		     
 		      a->next=start->next;
 		      start->next=a;
 		      pthread_rwlock_unlock(&lock_rw);
 		      return true;
 		   }
+		   // printf("value of start is %d\n", start->value); 
 		   start=start->next;
 		 }
+		 //printf("End of list: value of start is %d\n", start->value);
 		 if(start->value==key){
 		   pthread_rwlock_unlock(&lock_rw);
 		   return false;
@@ -86,7 +93,7 @@ public:
 		Node* a;
 		Node* RemovedNode;
 		if(head){
-		  //	  printf("value of head is %d\n", head->value);
+		  //printf("value of head is %d\n", head->value);
 		  if(head->value==key){
 		    if(head->next){
 		      head=head->next;
@@ -98,13 +105,13 @@ public:
 		 
 		     pthread_rwlock_unlock(&lock_rw);
 		     return true;
-		  }
+		 }
 		 a=head;
 		while(a->next){
-		  //printf("Removal list %d\n", a->value);
+		  
 		  if(a->value>key){
 		    pthread_rwlock_unlock(&lock_rw);
-		    // printf("value of a is %d\n", a->value);
+		    //printf("value of a is %d\n", a->value);
 		    return false;
 		  }
 		  
@@ -113,7 +120,7 @@ public:
 		     Node* RemovedNode=a->next;
 		     if(RemovedNode->next){
 		       a->next=RemovedNode->next;
-		       //  printf("New value of a->next is %d\n", a->next->value);
+		       // printf("New value of a->next is %d\n", a->next->value);
 		     }
 		     else{
 		       a->next=NULL;
@@ -125,6 +132,7 @@ public:
 		  a=a->next;
 		}
 
+		//	printf("End of list, value of a is %d\n", a->value);
 		
 		pthread_rwlock_unlock(&lock_rw);
 		return false;

@@ -2,17 +2,23 @@
 #include <vector>
 #include "clist.h"
 #include "Node.h"
-std::mutex newmutex;
+
+
+//static std::mutex newmutex;
+static int insertcount=0;
+
+
 class snode{
   //mutable std::mutex newmutex;
   
   public:
     
-  //std::mutex g_num_mutex;
+  mutable std::mutex newmutex;
   Node *listptr;
+  
 
   Node* create_Node(int insert){
-
+        
     Node *a=new Node();
     a->value=insert;
     a->next=NULL;
@@ -21,14 +27,15 @@ class snode{
   }
   
   snode(): listptr(NULL) {
-    
+    // printf("called this\n");
   }
 
-  /*  snode(snode &&other){
-    std::lock_guard<std::mutex> lock(other.mtx);
-    listptr=std::move(other.listptr);
+     snode(snode &&other){
+       printf("called this\n");
+     //std::lock_guard<std::mutex> lock(newmutex);
+   
 
-    }*/
+     }
 
 
   void setlistptr(clist *a){
@@ -38,10 +45,13 @@ class snode{
 
   bool insert(int key){
     newmutex.lock();
-    // printf("value we are inserting %d\n", key);   
+    insertcount=insertcount+1;
+    //  printf("This is insercount %d\n", insertcount);
+    // printf("value we are inserting %d\n", key);
+   
     Node *a=create_Node(key);
-    
-    // Node *start=listptr;
+    //  printf("reached here\n");
+   
     
     if(listptr){
 
@@ -49,17 +59,19 @@ class snode{
 
 	a->next=listptr;
 	listptr=a;
-	//printf("new value of listptr is %d\n", listptr->value);
+	//  printf("new value of listptr is %d\n", listptr->value);
 
 	newmutex.unlock();
 	return true;
       }
+
       Node *start=listptr;
       while(start->next){
 
 
          if(start->value==key){
-	   //	   printf("value of start is key %d\n", start->value);
+	   //printList();
+	   // printf("value of start is key %d\n", start->value);
 	   newmutex.unlock();
 	   return false;
 	 }
@@ -68,23 +80,26 @@ class snode{
 	   //printf("value of start's next is %d\n", start->next->value);
 	   a->next=start->next;
 	   start->next=a;
-	   //printf("new value of start's next is %d\n", start->next->value);
+	   //printf("new value of start's next is %d\n",
+	   //start->next->value);
+	   //printList();
 	   newmutex.unlock();
 	   return true;
 	 }
-	 // printf("value of start is %d\n", start->value);
+	 //printf("value of start is %d\n", start->value);
 	 start=start->next;
 	 
       }
       //printf("reached end of list %d\n", start->value);
 
       if(start->value==key){
+	//printList();
 	newmutex.unlock();
 	return false;
       }
-
-      start->next=a;
       
+      start->next=a;
+      ///printList();  
       newmutex.unlock();
       return true;
     }
@@ -94,8 +109,10 @@ class snode{
 
   
 	else{
-	  
+
+	  // printf("no head");
 	  listptr=a;
+	  //printList();
 	  newmutex.unlock();
 	  return true;
 	}
@@ -117,7 +134,7 @@ class snode{
 	 else{
 	   listptr=NULL;
 	 }
-	
+	 //printList();
 	 newmutex.unlock();
 	 return true;
        }
@@ -125,13 +142,15 @@ class snode{
 	 
 	 
 	 if(start->value>key){
-	   // printf("value of start is greater than key %d\n", start->value);
+	   //  printf("value of start is greater than key %d\n",
+	   //  start->value);
+	   //printList();
 	   newmutex.unlock();
 	   return false;
 	 }
 	 else if(start->next->value==key){
 	   Node *RemovedNode=start->next;
-	   // printf("value of start is %d\n", start->value);
+	   //printf("value of start is %d\n", start->value);
 	   //printf("value of start->next is %d\n", start->next->value);
 	   if(RemovedNode->next){
 	     start->next=RemovedNode->next;
@@ -140,21 +159,24 @@ class snode{
 	   else{
 	     start->next=NULL;
 	   }
-	  
+	   //printList();
 	   newmutex.unlock();
 	   return true;
 	 }
-	 // printf("value of start is %d\n", start->value);
+	 //printf("value of start is %d\n", start->value);
 	 start=start->next;
 	
        }
-       // printf("reached end of list\n");
+       
+       //printf("reached end of list. value of start is %d\n",
+       //start->value);
+       //printList();
        newmutex.unlock();
        return false;
      }
      else
        {
-
+	 //printList();
 	 newmutex.unlock();
 	 return false;
        }
@@ -164,9 +186,9 @@ class snode{
     
   }
 
-  bool lookup(int key){
+  bool lookup(int key) const{
     newmutex.lock();
-    printf("we are looking up %d\n", key); 
+    //printf("we are looking up %d\n", key); 
     if(listptr){
       Node *start=listptr;
       while(start){
@@ -196,7 +218,22 @@ class snode{
 
     }
   }
-    //newmutex.lock();
+
+
+
+  void printList(){
+    Node *begin=listptr;
+    while(begin->next){
+      printf("%d ", begin->value);
+      begin=begin->next;
+
+    }
+   
+    printf("%d\n", begin->value);
+
+  }
+  
+     //newmutex.lock();
     //bool lookup=true;
     //lookup=(listptr->lookup(key));
     //newmutex.unlock();

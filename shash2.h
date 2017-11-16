@@ -1,5 +1,5 @@
 #pragma once
-#include "snode2.h"
+#include "snode.h"
 #include <vector>
 /// TODO: complete this implementation of a thread-safe (concurrent) hash
 ///       table of integers, implemented as an array of linked lists.  In
@@ -11,17 +11,23 @@
 {
    std::vector<clist> buckets;
    int mynum=0;
-   std::vector<snode2>bucketlist;
+   std::vector<snode>bucketlist;
   
 public:
 
-
+   mutable std::mutex newmutex;  
    
   /*shash2(unsigned _buckets)
     {}*/
    
-  shash2(unsigned _buckets): mynum(_buckets), buckets(_buckets, clist(0)), bucketlist(_buckets, snode2())
+  shash2(unsigned _buckets): mynum(_buckets), buckets(_buckets, clist(0)) //bucketlist(_buckets, snode2())
 	{
+
+	  bucketlist.resize(_buckets);
+	  /* for(int i=0; i<_buckets;i++){
+	    bucketlist[i]=snode2();
+	    }*/
+	  // bucketlist.resize(_buckets);
 	  // snode2 a=snode2();
 	  
 	  // for(int i=0; i<_buckets; i++){
@@ -36,17 +42,21 @@ public:
 	/// success/failure of each insert in /results/ array.
      void insert(int* keys, bool* results, int num)
        {
+	 newmutex.lock();
 	 bool insert=true;
 	 for(int i=0; i< num; i++){
-	   // printf("value of i is %d\n", i);
-	   //printf("value of num is %d\n", num);
+	  
+	  
 	   
 	   int b= keys[i] % mynum;
-	   
-	   //printf("value of b is %d\n", b);
+	  
+	  
+	  
 	   insert=bucketlist[b].insert(keys[i]);
 	   results[i] = insert;
+	  
 	 }
+	 newmutex.unlock();
 	 
 	 /*	 bool insert=true;
          int b = keys % num;
@@ -59,35 +69,36 @@ public:
 	/// was removed successfully.
 	void remove(int* keys, bool* results, int num)
 	{
+	  newmutex.lock();
 	  bool ourremove=true;
+	  
 	  for(int i=0; i< num; i++){
 	    int b= keys[i] % mynum;
 	    ourremove=bucketlist[b].remove(keys[i]);
-	    /*  if(ourremove){
-	      printf("remove is true\n");
-	    }
-	    else{
-	      printf("remove is false\n");
-	      }*/
+	    //printf("value of i is %d\n", i);
+	    //printf("value of b is %d\n", b);
+	    //printf("we are inserting %d\n", keys[i]);
+	
+	
+	
+	
+	
 	    results[i] = ourremove;
 	  }
+	  newmutex.unlock();
 	}
 	/// return true if *key* is present in the list, false otherwise
 	void lookup(int* keys, bool* results, int num) const
 	{
+	  newmutex.lock();
 	  bool ourlookup=true;
 	  for(int i=0; i< num; i++){
 	    int b= keys[i] % mynum;
 	    ourlookup=bucketlist[b].lookup(keys[i]);
-	    /* if(ourlookup){
-	      printf("lookup is true\n");
-	    }
-	    else{
-	      printf("lookup is false\n");
-	      }*/
+	
 	    results[i] = ourlookup;
 	  }
-	  
+	  newmutex.unlock();
 
 	}
 

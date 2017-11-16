@@ -9,14 +9,24 @@ class tree
 {
 //This is for testing purposes. Do not access your Node directly.
 public:
+  //        std::mutex newmutex;
 	struct Node
 	{
 	public:
+	        std::mutex newmutex;
 		int value;
 		Node* left;
 		Node* right;
 	};
 	Node* head;
+        Node* create_Node(int insert){
+            Node* a=new Node();
+	    a->value=insert;
+	    a->left=NULL;
+	    a->right=NULL;
+	  
+       }
+     
 
 public:
 	tree(int)
@@ -26,7 +36,18 @@ public:
 	/// insert /num/ values from /data/ array into the tree, and return the
 	/// success/failure of each insert in /results/ array.
 	void insert(int* data, bool* results, int num)
-	{}
+	{
+	  /*  newmutex.lock();
+	  Node *a=create_Node(data);
+	  if(head){
+	    Node *start=head;
+	    
+
+
+	    }*/
+
+
+	}
 	/// remove *data* from the list if it was present; return true if the data
 	/// was removed successfully.
 	void remove(int* data, bool* results, int num)

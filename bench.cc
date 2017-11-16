@@ -1,3 +1,4 @@
+
 #include <atomic>
 #include <chrono>
 #include <thread>
@@ -115,7 +116,7 @@ int main(int argc, char **argv) {
     unsigned buckets  = 16;
     unsigned ratio    = 80;
     unsigned threads  = 15;
-    char     test     = 's';
+    char     test     = 'h';
 
     check_team(argv[0]);
 

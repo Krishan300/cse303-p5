@@ -3,7 +3,7 @@
 #include <mutex>
 
 
-std::mutex g_num_mutex;
+//std::mutex g_num_mutex;
 //std::lock_guard<std:mutex>lock(g_num_mutex);
 /// TODO: complete this implementation of a thread-safe (concurrent) sorted
 /// linked list of integers
@@ -22,6 +22,7 @@ class clist
   //  Node* head=new Node();
 
 public:
+        mutable std::mutex g_num_mutex;
   /*      struct Node
 	 {
 	   int value;
@@ -38,6 +39,10 @@ public:
 	: head(NULL)
 	{}
 
+      clist(const clist &other){
+
+      }
+  
   Node* create_Node(int insert){
     
     Node *a=new Node();
@@ -61,10 +66,10 @@ public:
 	     if(key<head->value){
 	   
 	   
-	       // printf("value of head is %d\n", head->value);
+	       //  printf("value of head is %d\n", head->value);
 	      a->next=head;
 	      head=a;
-	      // printf("new value of head is %d\n", head->value);
+	      //printList();
 	      g_num_mutex.unlock();
 	      return true;
 	      
@@ -73,32 +78,36 @@ public:
 	   
 	  
 	    while(start->next){
-	      //printf("value of start %d\n", start->value);
+	      //  printf("value of start %d\n", start->value);
 	       if(start->value==key){
-		
+
+		 // printList();
 		 g_num_mutex.unlock();
+		
 		 return false;
 	       }
 	       else if(start->next->value>key){
-		 //	printf("value of start is %d\n", start->value);
+		 // printf("value of start is %d\n", start->value);
 		 //printf("value of start's next is %d\n", start->next->value);
 		a->next=start->next;
 	        start->next=a;
+		//printList();
 		g_num_mutex.unlock();
 		return true;
 	      }
-	       // printf("value of start %d\n", start->value); 
+	       //  printf("value of start %d\n", start->value);
 	      start=start->next;
 	   
 	    }
 	   	   
-	    //    printf("value of start is %d\n",start->value);
+	    //printf("value of start at end of list is %d\n",start->value);
 	     if(start->value==key){
-	      
+	       // printList();
 	       g_num_mutex.unlock();
 	       return false;
 	     }
 	     start->next=a;
+	     //printList();
 	     g_num_mutex.unlock();
 	     return true;
 	   
@@ -113,7 +122,7 @@ public:
 
 
 	    head=a;
-	   
+	    // printList();
 	    g_num_mutex.unlock();
 	    return true;
 	 
@@ -135,10 +144,10 @@ public:
 	  Node *currentNode=head;
 
 	  if(currentNode->value == key){
-	    // printf("Removing head \n");
+	    //printf("Removing head \n");
 	    if(head->next){
 	       head=currentNode->next;
-	       //printf("New value of head is %d\n", head->value);
+	       // printf("New value of head is %d\n", head->value);
 	    }
 	    else{
 	      head=NULL;
@@ -153,7 +162,7 @@ public:
 	    
 	  while(currentNode->next){
 	        
-	    //   printf("value in list is %d\n", currentNode->value);
+	       
 		if(currentNode->value>key){
 		  // printf("value %d is greater than key\n", currentNode->value);
 		  g_num_mutex.unlock();
@@ -162,26 +171,27 @@ public:
 
 		if(currentNode->next->value==key){
 		    Node* RemovedNode=currentNode->next;
-		    //printf("Removing value %d\n", currentNode->next);
+		    // printf("Removing value %d\n", currentNode->next->value);
 		    if(RemovedNode->next){
 		      currentNode->next=RemovedNode->next;
+		      //printf("New value of currentNode->next is %d\n",currentNode->next->value);
 		    }
 		    else{
 		      currentNode->next=NULL;
 		    }
-		      // delete RemovedNode;
+		   
 		    g_num_mutex.unlock();
 		    return true;
 		}
 		
-		    
-		// printf("value of currentNode is %d\n", currentNode->value);
+		     
+		//printf("value of currentNode is %d\n", currentNode->value);
 		     currentNode=currentNode->next;
 		     
 
 	  }
 
-	          
+	  //printf("reached end of list. value of currentnode is %d\n", currentNode->value);
 		  g_num_mutex.unlock();
 		  return false;
 	}
@@ -201,6 +211,7 @@ public:
 	{
 	       
 	       g_num_mutex.lock();
+	       //printf("we are looking up %d\n", key);
 	       if(!head){
 		 g_num_mutex.unlock();
 		 return false;
@@ -214,16 +225,19 @@ public:
 		   
 		   if(n->value == key)
 		     {
+		       //  printf("value of n is key %d\n", n->value);
 		       g_num_mutex.unlock();
 		       return true;
 		     }
 		   else if(n->value > key){
+		     // printf("value of n is more than key key %d\n",n->value);
 		     g_num_mutex.unlock();
 		     return false;
 		   }
+		   //printf("value of n is %d\n", n->value);
 		   n = n->next;
 	       }
-
+	       // printf("value of n at end of list is %d\n", n->value);
 	       if(n->value == key){
 		 g_num_mutex.unlock();
 		 return true;
@@ -299,4 +313,15 @@ public:
 	{
 		return 0;
 	}
+
+  void printList(){
+    Node *x=head;
+    printf("This is list\n");
+    while(x){
+      printf("%d ", x->value);
+      x=x->next;
+    }
+
+  }
+
 };

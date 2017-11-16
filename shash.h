@@ -9,16 +9,22 @@
 ///       contains the lock, so we can't just reuse the clist
 ///       implementation
 
+//static int othercount=0;
 class shash
 {
      std::vector<clist> buckets;
     int num=0;
     std::vector<snode> bucketlist;
     public:
-    shash(unsigned _buckets): num(_buckets), buckets(_buckets, clist(0)), bucketlist(_buckets, snode())
+  shash(unsigned _buckets): num(_buckets), buckets(_buckets, clist(0)) // , bucketlist(_buckets, snode())
   	{
-	 
-         	 
+	  if(_buckets>0){
+	    bucketlist.resize(_buckets);
+          }
+	  else{
+	    printf("The number of buckets must be greater than 0\n");
+	    exit(0);
+	  }
 	  /* for(int i=0; i<_buckets; i++){
           
 	   bucketlist[i].setlistptr(&buckets[i]);
@@ -38,7 +44,8 @@ class shash
 	{
 
 	  int b = key % num;
-	  //printf("%d\n", b);
+	  // othercount=othercount+1;
+	  // printf("This is othercount (shash) %d\n", othercount);
 	  
 	  return bucketlist[b].insert(key);
 	
