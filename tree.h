@@ -1,4 +1,6 @@
 #pragma once
+#include <algorithm>    // std::max
+
 
 /// TODO: complete this implementation of a thread-safe (concurrent) AVL
 ///       tree of integers, implemented as a set of Node objects.
@@ -9,45 +11,76 @@ class tree
 {
 //This is for testing purposes. Do not access your Node directly.
 public:
-  //        std::mutex newmutex;
 	struct Node
 	{
-	public:
-	        std::mutex newmutex;
-		int value;
-		Node* left;
-		Node* right;
+		public:
+			int value;
+			Node* left;
+			Node* right;
 	};
 	Node* head;
-        Node* create_Node(int insert){
-            Node* a=new Node();
-	    a->value=insert;
-	    a->left=NULL;
-	    a->right=NULL;
-	  
-       }
-     
+
+
 
 public:
 	tree(int)
 	: head(NULL)
 	{}
 
+
+	bool inserthelper(int data){
+		if(head == NULL)
+		{
+			head = new Node;
+			head -> value = *data;
+			head -> left = NULL;
+			head -> right = NULL;
+		}
+		else if(key< head->value)
+		{
+			head->left = insert((int*)(head->left->value), results, num);
+			head = balance(head);
+		}
+		else if(key >= head->value)
+		{
+			head->right = insert(head->right->value, key);
+			head = balance(head);
+		}
+
+
+	}
 	/// insert /num/ values from /data/ array into the tree, and return the
 	/// success/failure of each insert in /results/ array.
 	void insert(int* data, bool* results, int num)
 	{
-	  /*  newmutex.lock();
-	  Node *a=create_Node(data);
-	  if(head){
-	    Node *start=head;
-	    
+	
+		for(int i=0; i<num; i++){
+			int insertvalue=data[i];
+			bool retval=inserthelper(insertvalue);
+			results[i]=retval;
 
-
-	    }*/
-
-
+		}
 	}
+
+	int findHeight(Node* node)
+	{
+		int height = 0;
+		if(node != NULL)
+		{
+			int leftHeight = findHeight(node->left);
+			int rightHeight = findHeight(node->right);
+			int max = std::max(leftHeight, rightHeight);
+			height = max +1;
+		}
+		return height;
+	}
+
+	Node* balance(Node* head)
+	{
+		int balanceFactor = findHeight(head->left)-findHeight(head->right);
+		return head;
+	}
+
 	/// remove *data* from the list if it was present; return true if the data
 	/// was removed successfully.
 	void remove(int* data, bool* results, int num)
