@@ -41,6 +41,7 @@ public:
 
 	Node* inserthelper(Node* root, int data){
 		//printf(" helper %d\n",data);
+		
 		if(root == NULL)
 		{
 				//*result = true;
@@ -186,7 +187,7 @@ public:
 			//printf("insert  %d\n", data[0]);
 			head = inserthelper(head, data[0]);
 			//printf("result  %s\n", results[i]);
-		
+			
 			results[0]=true;
 			//display(head, 1);
 			//printf("insert over\n");
@@ -208,6 +209,8 @@ public:
 	        printf("\n");
 	        if (ptr == head)
 	        cout<<"Root -> ";
+	        // int a = getElement(1,head);
+// 			printf("get elem: %d\n",a); // getElement(1,head));
 	        for (i = 0; i < level && ptr != head; i++)
 	            cout<<"        ";
 	        cout<<ptr->value;
@@ -344,7 +347,7 @@ public:
 		return size;
 	}
 
-	int getElement(size_t idx) const
+	int getElement(size_t idx) //const
 	{
 
 		return getElement(idx, head);
@@ -379,16 +382,38 @@ int getnode(Node *head)
 
 private:
 	//Returns the idx'th element from the tree assuming an inorder traversal.
-	int getElement(size_t idx, Node* at) const
+	int getElement(size_t idx, Node* at) //const
 	{
-		int result = 0;
+		//int result = 0;
 		//return 0;
-		if(head == NULL)
+		//mtx.lock();
+		int value = 0;
+		if(at == NULL)
 		{
 			return -1;
 		}
-		
-		return 0;
+		int lNodes = getnode(at->left);
+		if(lNodes==(int)idx)
+		{
+			
+			return at->value;
+		}
+		else if(idx<lNodes)
+		{
+			value = getElement(idx, at->left);
+		}
+		else if(idx>lNodes)
+		{
+			value = getElement(idx-lNodes-1,at->right);
+		}
+		else if(idx>getnode(at))
+		{
+			return -1;
+		}
+		//mtx.unlock();
+
+		return value;
+		//return 0;
 		
 	}
 };
