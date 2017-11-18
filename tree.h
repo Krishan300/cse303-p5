@@ -404,7 +404,7 @@ private:
 		}
 		else if(idx>lNodes)
 		{
-			value = getElement(idx-lNodes-1,at->right);
+			value = getElement(idx-lNodes,at->right);
 		}
 		else if(idx>getnode(at))
 		{
