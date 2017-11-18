@@ -199,24 +199,24 @@ public:
 	}
 
 
-
-	void display(Node *ptr, int level)
-	{
-	    int i;
-	    if (ptr!=NULL)
-	    {
-	        display(ptr->right, level + 1);
-	        printf("\n");
-	        if (ptr == head)
-	        cout<<"Root -> ";
-	        // int a = getElement(1,head);
-// 			printf("get elem: %d\n",a); // getElement(1,head));
-	        for (i = 0; i < level && ptr != head; i++)
-	            cout<<"        ";
-	        cout<<ptr->value;
-	        display(ptr->left, level + 1);
-	    }
-	}
+// 
+// 	void display(Node *ptr, int level)
+// 	{
+// 	    int i;
+// 	    if (ptr!=NULL)
+// 	    {
+// 	        display(ptr->right, level + 1);
+// 	        printf("\n");
+// 	        if (ptr == head)
+// 	        cout<<"Root -> ";
+// 	        // int a = getElement(1,head);
+// // 			printf("get elem: %d\n",a); // getElement(1,head));
+// 	        for (i = 0; i < level && ptr != head; i++)
+// 	            cout<<"        ";
+// 	        cout<<ptr->value;
+// 	        display(ptr->left, level + 1);
+// 	    }
+// 	}
 
 	Node *removehelper(Node *root, int data)
 	{
