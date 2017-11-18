@@ -373,7 +373,7 @@ int getnode(Node *head)
 	 }
 	 else
 	 {
-	  	return 1+ getnode(root->left) + getnode(root->right);
+	  	return 1+ getnode(head->left) + getnode(head->right);
 	 }
 }
 
@@ -387,21 +387,7 @@ private:
 		{
 			return -1;
 		}
-		if(getNode(head->left)<idx)
-		{
-			
-		}
-		// while(at->left!=NULL)
-// 		{
-// 			getElement(idx, head->left);
-// 		
-// 		}
-// 		while(idx!=0)
-// 		{
-// 			result = at->value;
-// 			//To do: traverse inorder
-// 			idx--;
-// 		}
+		
 		return 0;
 		
 	}
